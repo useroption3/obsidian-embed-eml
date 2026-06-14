@@ -11,10 +11,7 @@ const root = join(dirname(fileURLToPath(import.meta.url)), "..");
 const pngB64 =
 	"iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==";
 const attB64 = Buffer.from("hello attachment!\n", "utf8").toString("base64");
-const subject =
-	"=?UTF-8?B?" +
-	Buffer.from("こんにちは: メール埋め込みテスト", "utf8").toString("base64") +
-	"?=";
+const subject = "Sample email for Embed EML";
 
 const eml = [
 	"From: Alice Example <alice@example.com>",
@@ -32,7 +29,7 @@ const eml = [
 	"Content-Type: text/plain; charset=UTF-8",
 	"Content-Transfer-Encoding: 8bit",
 	"",
-	"これはテキスト版の本文です。",
+	"This is the plain-text version of the message.",
 	"Hello in plain text.",
 	"",
 	"--ALT",
@@ -40,7 +37,7 @@ const eml = [
 	"Content-Transfer-Encoding: 8bit",
 	"",
 	"<html><body><h1>Hello</h1>",
-	"<p>これは<strong>HTML</strong>版の本文です。</p>",
+	"<p>This is the <strong>HTML</strong> version of the message.</p>",
 	'<p>Inline: <img src="cid:logo123" alt="logo"></p>',
 	'<p>Remote: <img src="https://example.com/tracker.png" alt="remote"></p>',
 	"</body></html>",

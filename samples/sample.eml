@@ -1,7 +1,7 @@
 From: Alice Example <alice@example.com>
 To: Bob <bob@example.com>
 Cc: Carol <carol@example.com>
-Subject: =?UTF-8?B?44GT44KT44Gr44Gh44GvOiDjg6Hjg7zjg6vln4vjgoHovrzjgb/jg4bjgrnjg4g=?=
+Subject: Sample email for Embed EML
 Date: Sat, 14 Jun 2025 10:30:00 +0900
 MIME-Version: 1.0
 Content-Type: multipart/related; boundary="REL"
@@ -13,7 +13,7 @@ Content-Type: multipart/alternative; boundary="ALT"
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-これはテキスト版の本文です。
+This is the plain-text version of the message.
 Hello in plain text.
 
 --ALT
@@ -21,7 +21,7 @@ Content-Type: text/html; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
 <html><body><h1>Hello</h1>
-<p>これは<strong>HTML</strong>版の本文です。</p>
+<p>This is the <strong>HTML</strong> version of the message.</p>
 <p>Inline: <img src="cid:logo123" alt="logo"></p>
 <p>Remote: <img src="https://example.com/tracker.png" alt="remote"></p>
 </body></html>
