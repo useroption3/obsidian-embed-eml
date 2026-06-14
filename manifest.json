@@ -1,0 +1,10 @@
+{
+	"id": "embed-eml",
+	"name": "Embed EML",
+	"version": "0.1.1",
+	"minAppVersion": "1.4.0",
+	"description": "Embed .eml email files directly in your notes with ![[file.eml]].",
+	"author": "useroption3",
+	"authorUrl": "https://github.com/useroption3",
+	"isDesktopOnly": false
+}

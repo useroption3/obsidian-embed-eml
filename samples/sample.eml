@@ -1,0 +1,46 @@
+From: Alice Example <alice@example.com>
+To: Bob <bob@example.com>
+Cc: Carol <carol@example.com>
+Subject: =?UTF-8?B?44GT44KT44Gr44Gh44GvOiDjg6Hjg7zjg6vln4vjgoHovrzjgb/jg4bjgrnjg4g=?=
+Date: Sat, 14 Jun 2025 10:30:00 +0900
+MIME-Version: 1.0
+Content-Type: multipart/related; boundary="REL"
+
+--REL
+Content-Type: multipart/alternative; boundary="ALT"
+
+--ALT
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+これはテキスト版の本文です。
+Hello in plain text.
+
+--ALT
+Content-Type: text/html; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+<html><body><h1>Hello</h1>
+<p>これは<strong>HTML</strong>版の本文です。</p>
+<p>Inline: <img src="cid:logo123" alt="logo"></p>
+<p>Remote: <img src="https://example.com/tracker.png" alt="remote"></p>
+</body></html>
+
+--ALT--
+
+--REL
+Content-Type: image/png
+Content-Transfer-Encoding: base64
+Content-ID: <logo123>
+Content-Disposition: inline; filename="logo.png"
+
+iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==
+
+--REL
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="readme.txt"
+
+aGVsbG8gYXR0YWNobWVudCEK
+
+--REL--

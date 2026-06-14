@@ -1,0 +1,229 @@
+/* ===== Embed EML ===== */
+
+/* Full-tab view (opening a .eml file directly) */
+.eml-view {
+	padding: 16px 16px 48px;
+	max-width: 1000px;
+	margin: 0 auto;
+}
+
+.eml-view .eml-embed {
+	margin: 0;
+}
+
+.eml-embed {
+	margin: 0.5em 0;
+	border: 1px solid var(--background-modifier-border);
+	border-radius: var(--radius-m);
+	background: var(--background-primary);
+	overflow: hidden;
+}
+
+/* Header */
+.eml-header {
+	padding: 10px 12px;
+	background: var(--background-secondary);
+	border-bottom: 1px solid var(--background-modifier-border);
+}
+
+.eml-title-row {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+}
+
+.eml-icon {
+	display: inline-flex;
+	color: var(--text-muted);
+	flex-shrink: 0;
+}
+
+.eml-icon svg {
+	width: 16px;
+	height: 16px;
+}
+
+.eml-subject {
+	font-weight: 600;
+	font-size: var(--font-ui-medium);
+	color: var(--text-normal);
+	line-height: 1.3;
+}
+
+.eml-meta {
+	display: grid;
+	gap: 2px;
+	margin-top: 6px;
+}
+
+.eml-field {
+	display: flex;
+	gap: 6px;
+	font-size: var(--font-ui-small);
+}
+
+.eml-field-label {
+	min-width: 44px;
+	flex-shrink: 0;
+	color: var(--text-faint);
+}
+
+.eml-field-value {
+	color: var(--text-muted);
+	word-break: break-word;
+}
+
+/* Body */
+.eml-body-scroll {
+	background: #ffffff;
+}
+
+/* Long-body handling: cap height + scroll only inside inline embeds (never the
+   full-tab view), and only when the user picked "scroll" mode. Driven by the
+   body class + CSS variable set from settings, so it updates without re-rendering. */
+body.eml-mode-scroll .eml-embed-container .eml-body-scroll,
+body.eml-mode-scroll .eml-embed-container .eml-text {
+	max-height: var(--eml-max-body-height, 400px);
+	overflow: auto;
+}
+
+.eml-iframe {
+	display: block;
+	width: 100%;
+	height: 120px;
+	border: none;
+	background: #ffffff;
+}
+
+.eml-text {
+	margin: 0;
+	padding: 12px;
+	white-space: pre-wrap;
+	word-break: break-word;
+	font-family: var(--font-text);
+	font-size: var(--font-text-size);
+	color: var(--text-normal);
+	background: var(--background-primary);
+}
+
+.eml-empty {
+	padding: 12px;
+	color: var(--text-faint);
+	font-style: italic;
+}
+
+/* Remote-image banner */
+.eml-remote-banner {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 8px;
+	padding: 6px 12px;
+	background: var(--background-modifier-hover);
+	color: var(--text-muted);
+	font-size: var(--font-ui-small);
+}
+
+.eml-remote-btn {
+	flex-shrink: 0;
+	padding: 2px 10px;
+	font-size: var(--font-ui-smaller);
+	cursor: pointer;
+}
+
+/* Attachments */
+.eml-attachments {
+	padding: 8px 12px;
+	border-top: 1px solid var(--background-modifier-border);
+	background: var(--background-secondary);
+}
+
+.eml-attachments-head {
+	display: flex;
+	align-items: center;
+	gap: 6px;
+	margin-bottom: 6px;
+	color: var(--text-muted);
+	font-size: var(--font-ui-small);
+}
+
+.eml-attach-icon {
+	display: inline-flex;
+}
+
+.eml-attach-icon svg {
+	width: 14px;
+	height: 14px;
+}
+
+.eml-attachment-list {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 6px;
+}
+
+.eml-attachment {
+	display: flex;
+	align-items: center;
+	gap: 6px;
+	padding: 4px 10px;
+	border: 1px solid var(--background-modifier-border);
+	border-radius: var(--radius-s);
+	background: var(--background-primary);
+	font-size: var(--font-ui-small);
+	cursor: pointer;
+	user-select: none;
+}
+
+.eml-attachment:hover {
+	background: var(--background-modifier-hover);
+	border-color: var(--background-modifier-border-hover);
+}
+
+.eml-attachment-icon {
+	display: inline-flex;
+	color: var(--text-muted);
+}
+
+.eml-attachment-icon svg {
+	width: 14px;
+	height: 14px;
+}
+
+.eml-attachment-name {
+	font-weight: 500;
+	color: var(--text-normal);
+}
+
+.eml-attachment-size {
+	color: var(--text-faint);
+}
+
+/* Error */
+.eml-error {
+	display: flex;
+	gap: 8px;
+	margin: 0.5em 0;
+	padding: 10px 12px;
+	border: 1px solid var(--background-modifier-border);
+	border-radius: var(--radius-m);
+	background: var(--background-secondary);
+}
+
+.eml-error-icon {
+	display: inline-flex;
+	color: var(--text-error);
+	flex-shrink: 0;
+}
+
+.eml-error-title {
+	font-weight: 600;
+	color: var(--text-error);
+}
+
+.eml-error-msg {
+	margin-top: 2px;
+	color: var(--text-muted);
+	font-size: var(--font-ui-small);
+	word-break: break-word;
+}

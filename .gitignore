@@ -1,0 +1,15 @@
+# build / deps
+node_modules/
+main.js
+*.js.map
+test/out.mjs
+
+# obsidian
+data.json
+
+# editor / local config
+.claude/
+.vscode/
+
+# os
+.DS_Store
