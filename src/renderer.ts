@@ -1,4 +1,4 @@
-import { Component, Notice, Platform, setIcon } from "obsidian";
+import { Component, FileSystemAdapter, Notice, Platform, normalizePath, setIcon } from "obsidian";
 import type EmbedEmlPlugin from "./main";
 import { ParsedAttachment, ParsedEml } from "./parser";
 import { formatBytes, toDataUrl } from "./util";
@@ -270,28 +270,33 @@ export class EmlRenderer {
 			return;
 		}
 		try {
-			const os = require("os");
-			const fs = require("fs");
-			const path = require("path");
 			const { shell } = require("electron");
+			const adapter = this.plugin.app.vault.adapter;
+			if (!(adapter instanceof FileSystemAdapter)) {
+				new Notice("Cannot open attachment: vault is not on the local filesystem.");
+				return;
+			}
 
 			// Keep the real name/extension so the OS picks the right app.
 			const safeName = (att.filename || "attachment").replace(
 				/[\\/:*?"<>|]/g,
 				"_"
 			);
-			const dir = fs.mkdtempSync(path.join(os.tmpdir(), "obsidian-eml-"));
-			const filePath = path.join(dir, safeName);
-			fs.writeFileSync(filePath, Buffer.from(att.content));
-			// Mark the temp copy read-only so editors (Word, Excel, …) open it in
-			// read-only mode — it's a throwaway copy, so edits would be lost anyway.
-			try {
-				fs.chmodSync(filePath, 0o444);
-			} catch {
-				/* best-effort; the file still opens without the read-only bit */
-			}
 
-			const error: string = await shell.openPath(filePath);
+			// Write via the Obsidian vault adapter (no Node.js fs module) to a
+			// plugin-managed folder inside the vault.
+			const uniqueId = `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+			const tmpDir = normalizePath(
+				`.obsidian/plugins/obsidian-embed-eml/tmp/${uniqueId}`
+			);
+			await adapter.mkdir(tmpDir);
+			const tmpPath = normalizePath(`${tmpDir}/${safeName}`);
+			// slice() gives a fresh Uint8Array with its own ArrayBuffer, avoiding
+			// shared-buffer aliasing when the view doesn't start at offset 0.
+			await adapter.writeBinary(tmpPath, att.content.slice().buffer as ArrayBuffer);
+
+			const fullPath = adapter.getFullPath(tmpPath);
+			const error: string = await shell.openPath(fullPath);
 			if (error) new Notice(`Couldn't open attachment: ${error}`);
 		} catch (err) {
 			new Notice(
