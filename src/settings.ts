@@ -28,6 +28,10 @@ export class EmbedEmlSettingTab extends PluginSettingTab {
 	}
 
 	display(): void {
+		this.render();
+	}
+
+	private render(): void {
 		const { containerEl } = this;
 		containerEl.empty();
 
@@ -71,7 +75,7 @@ export class EmbedEmlSettingTab extends PluginSettingTab {
 						this.plugin.settings.bodyDisplayMode =
 							value as BodyDisplayMode;
 						await this.plugin.saveSettings();
-						this.display();
+						this.render();
 					})
 			);
 
