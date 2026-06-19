@@ -17,8 +17,8 @@ export default class EmbedEmlPlugin extends Plugin {
 		await this.loadSettings();
 		this.applyBodyDisplayState();
 		this.register(() => {
-			document.body.removeClass("eml-mode-scroll");
-			document.body.style.removeProperty("--eml-max-body-height");
+			activeDocument.body.removeClass("eml-mode-scroll");
+			activeDocument.body.style.removeProperty("--eml-max-body-height");
 		});
 		this.addSettingTab(new EmbedEmlSettingTab(this.app, this));
 
@@ -63,8 +63,8 @@ export default class EmbedEmlPlugin extends Plugin {
 	}
 
 	async loadSettings(): Promise<void> {
-		const data = await this.loadData();
-		this.settings = Object.assign({}, DEFAULT_SETTINGS, data);
+		const data = (await this.loadData()) as Partial<EmbedEmlSettings> | null;
+		this.settings = Object.assign({}, DEFAULT_SETTINGS, data) as EmbedEmlSettings;
 		// Migrate older configs that only stored a numeric maxBodyHeight.
 		if (data && data.bodyDisplayMode === undefined) {
 			this.settings.bodyDisplayMode =
@@ -84,11 +84,11 @@ export default class EmbedEmlPlugin extends Plugin {
 
 	/** Reflect the long-body display setting on <body> so embeds update live via CSS. */
 	private applyBodyDisplayState(): void {
-		document.body.toggleClass(
+		activeDocument.body.toggleClass(
 			"eml-mode-scroll",
 			this.settings.bodyDisplayMode === "scroll"
 		);
-		document.body.style.setProperty(
+		activeDocument.body.style.setProperty(
 			"--eml-max-body-height",
 			`${this.settings.maxBodyHeight || 400}px`
 		);

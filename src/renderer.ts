@@ -1,4 +1,5 @@
 import { Component, FileSystemAdapter, Notice, Platform, normalizePath, setIcon } from "obsidian";
+import { shell } from "electron";
 import type EmbedEmlPlugin from "./main";
 import { ParsedAttachment, ParsedEml } from "./parser";
 import { formatBytes, toDataUrl } from "./util";
@@ -270,7 +271,6 @@ export class EmlRenderer {
 			return;
 		}
 		try {
-			const { shell } = require("electron");
 			const adapter = this.plugin.app.vault.adapter;
 			if (!(adapter instanceof FileSystemAdapter)) {
 				new Notice("Cannot open attachment: vault is not on the local filesystem.");
@@ -314,10 +314,10 @@ export class EmlRenderer {
 			type: att.mimeType || "application/octet-stream",
 		});
 		const url = URL.createObjectURL(blob);
-		const a = document.createElement("a");
+		const a = activeDocument.createElement("a");
 		a.href = url;
 		a.download = att.filename || "attachment";
-		document.body.appendChild(a);
+		activeDocument.body.appendChild(a);
 		a.click();
 		a.remove();
 		window.setTimeout(() => URL.revokeObjectURL(url), 1000);
