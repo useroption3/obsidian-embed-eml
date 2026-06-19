@@ -1,6 +1,6 @@
 {
 	"name": "obsidian-embed-eml",
-	"version": "1.0.0",
+	"version": "1.0.1",
 	"description": "Embed .eml email files directly in your Obsidian notes.",
 	"main": "main.js",
 	"type": "module",
