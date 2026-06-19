@@ -12,9 +12,6 @@ Reference an email like any other attachment:
 
 ![](screenshots/image.png)
 
-> \[!NOTE]
-> **Beta.** This plugin is not yet in the official Obsidian community catalog. Install it via [BRAT](#install-via-brat-recommended-for-beta) or [manually](#manual-install) for now.
-
 ## Features
 
 * **Inline embeds** in both Reading view and Live Preview via `![[file.eml]]`.
@@ -35,13 +32,16 @@ Reference an email like any other attachment:
 
 ## Installation
 
-### Install via BRAT (recommended for beta)
+### Community plugin (recommended)
+
+1. Open Obsidian → **Settings** → **Community plugins** → **Browse**.
+2. Search for **Embed EML** and click **Install**, then **Enable**.
+
+### Install via BRAT
 
 1. Install the **BRAT** community plugin and enable it.
 2. BRAT → **Add beta plugin** → enter `useroption3/obsidian-embed-eml`.
 3. Enable **Embed EML** under Settings → Community plugins.
-
-BRAT keeps the plugin updated as new beta releases are published.
 
 ### Manual install
 
