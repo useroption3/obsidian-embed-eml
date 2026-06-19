@@ -85,24 +85,6 @@ A ready-made `samples/sample.eml` is included for testing.
 
 * Opening an attachment writes a temporary, **read-only** copy to your system temp folder and hands it to your OS default app — open attachments only from emails you trust.
 
-## Development
-
-```bash
-npm install      # install dependencies
-npm run dev      # watch + rebuild on change
-npm run build    # type-check + production build
-```
-
-The bundled output is `main.js` at the repo root. For live development, symlink or
-copy the repo into `<vault>/.obsidian/plugins/embed-eml/` and use the
-[Hot-Reload](https://github.com/pjeby/hot-reload) plugin, or re-toggle the plugin.
-
-Dev helpers in `test/`:
-
-```bash
-node test/make-and-parse.mjs   # (re)generate samples/sample.eml and dump the parse
-```
-
 ## License
 
 MIT
