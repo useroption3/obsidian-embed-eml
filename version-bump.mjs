@@ -12,3 +12,12 @@ writeFileSync("manifest.json", JSON.stringify(manifest, null, "\t"));
 let versions = JSON.parse(readFileSync("versions.json", "utf8"));
 versions[targetVersion] = minAppVersion;
 writeFileSync("versions.json", JSON.stringify(versions, null, "\t"));
+
+// stamp the version into the styles.css header. GitHub keys attestations by file
+// digest, so an unchanged styles.css keeps serving the previous release's
+// attestation and the Obsidian plugin review reports it as unverifiable.
+let styles = readFileSync("styles.css", "utf8");
+writeFileSync(
+	"styles.css",
+	styles.replace(/^\/\* =====.*? ===== \*\//, `/* ===== Embed EML ${targetVersion} ===== */`),
+);
