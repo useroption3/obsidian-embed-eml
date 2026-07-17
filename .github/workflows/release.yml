@@ -24,13 +24,22 @@ jobs:
 
       - run: npm run build
 
-      - name: Attest build artifacts
+      # One attestation per file: a multi-subject attestation makes the Obsidian
+      # plugin review report main.js and styles.css as verification failures.
+      - name: Attest main.js
         uses: actions/attest-build-provenance@v2
         with:
-          subject-path: |
-            main.js
-            styles.css
-            manifest.json
+          subject-path: main.js
+
+      - name: Attest styles.css
+        uses: actions/attest-build-provenance@v2
+        with:
+          subject-path: styles.css
+
+      - name: Attest manifest.json
+        uses: actions/attest-build-provenance@v2
+        with:
+          subject-path: manifest.json
 
       - name: Create GitHub release
         env:
