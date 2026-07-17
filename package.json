@@ -6,6 +6,7 @@
 	"type": "module",
 	"scripts": {
 		"dev": "node esbuild.config.mjs",
+		"lint": "eslint .",
 		"build": "tsc -noEmit -skipLibCheck && node esbuild.config.mjs production",
 		"version": "node version-bump.mjs && git add manifest.json versions.json"
 	},
@@ -21,6 +22,8 @@
 	"devDependencies": {
 		"@types/node": "^20.11.0",
 		"esbuild": "^0.28.1",
+		"eslint": "^9.39.5",
+		"eslint-plugin-obsidianmd": "^0.4.1",
 		"obsidian": "latest",
 		"typescript": "^5.4.5"
 	},

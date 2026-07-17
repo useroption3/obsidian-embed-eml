@@ -1,7 +1,6 @@
 import {
 	App,
 	PluginSettingTab,
-	Setting,
 	type SettingDefinitionItem,
 } from "obsidian";
 import type EmbedEmlPlugin from "./main";
@@ -82,76 +81,4 @@ export class EmbedEmlSettingTab extends PluginSettingTab {
 		this.refreshDomState();
 	}
 
-	/** Fallback for Obsidian < 1.13.0, which ignores getSettingDefinitions(). */
-	display(): void {
-		this.render();
-	}
-
-	private render(): void {
-		const { containerEl } = this;
-		containerEl.empty();
-
-		new Setting(containerEl)
-			.setName("Render HTML body")
-			.setDesc(
-				"Show the HTML version of emails when available. Disable to always show the plain-text version."
-			)
-			.addToggle((toggle) =>
-				toggle
-					.setValue(this.plugin.settings.renderHtml)
-					.onChange(async (value) => {
-						this.plugin.settings.renderHtml = value;
-						await this.plugin.saveSettings();
-					})
-			);
-
-		new Setting(containerEl)
-			.setName("Block remote images")
-			.setDesc(
-				"Prevent emails from loading remote images and tracking pixels until you choose to load them."
-			)
-			.addToggle((toggle) =>
-				toggle
-					.setValue(this.plugin.settings.blockRemoteImages)
-					.onChange(async (value) => {
-						this.plugin.settings.blockRemoteImages = value;
-						await this.plugin.saveSettings();
-					})
-			);
-
-		new Setting(containerEl)
-			.setName("Long message body")
-			.setDesc("How to display an email whose body is very tall.")
-			.addDropdown((dropdown) =>
-				dropdown
-					.addOption("full", "Show in full")
-					.addOption("scroll", "Scroll within a fixed height")
-					.setValue(this.plugin.settings.bodyDisplayMode)
-					.onChange(async (value) => {
-						this.plugin.settings.bodyDisplayMode =
-							value as BodyDisplayMode;
-						await this.plugin.saveSettings();
-						this.render();
-					})
-			);
-
-		if (this.plugin.settings.bodyDisplayMode === "scroll") {
-			new Setting(containerEl)
-				.setName("Body height")
-				.setDesc("Maximum height in pixels before the body scrolls.")
-				.addText((text) =>
-					text
-						.setPlaceholder(String(DEFAULT_SETTINGS.maxBodyHeight))
-						.setValue(String(this.plugin.settings.maxBodyHeight))
-						.onChange(async (value) => {
-							const n = parseInt(value, 10);
-							this.plugin.settings.maxBodyHeight =
-								isNaN(n) || n < 50
-									? DEFAULT_SETTINGS.maxBodyHeight
-									: n;
-							await this.plugin.saveSettings();
-						})
-				);
-		}
-	}
 }

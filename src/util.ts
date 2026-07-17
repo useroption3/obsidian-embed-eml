@@ -4,7 +4,7 @@ export function uint8ToBase64(bytes: Uint8Array): string {
 	const chunkSize = 0x8000;
 	for (let i = 0; i < bytes.length; i += chunkSize) {
 		const chunk = bytes.subarray(i, i + chunkSize);
-		binary += String.fromCharCode.apply(null, chunk as unknown as number[]);
+		binary += String.fromCharCode.apply(null, chunk);
 	}
 	return btoa(binary);
 }

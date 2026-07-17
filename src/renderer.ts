@@ -178,7 +178,13 @@ export class EmlRenderer {
 	 */
 	private prepareHtml(html: string): { srcdoc: string; blockedCount: number } {
 		const eml = this.parsed;
-		const doc = new DOMParser().parseFromString(html, "text/html");
+		// Prepended rather than attached as an element: the parser hoists a
+		// leading <style> into <head>, ahead of the mail's own CSS so the mail
+		// still wins, and styles.css never reaches the sandboxed iframe.
+		const doc = new DOMParser().parseFromString(
+			`<style>${IFRAME_BASE_CSS}</style>` + html,
+			"text/html"
+		);
 		let blockedCount = 0;
 
 		const cidMap = new Map<string, ParsedAttachment>();
@@ -212,7 +218,6 @@ export class EmlRenderer {
 		const head =
 			doc.head ?? doc.documentElement.createEl("head", { prepend: true });
 		head.createEl("base", { attr: { target: "_blank" }, prepend: true });
-		head.createEl("style", { text: IFRAME_BASE_CSS });
 
 		return {
 			srcdoc: "<!DOCTYPE html>" + doc.documentElement.outerHTML,
