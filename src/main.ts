@@ -7,6 +7,7 @@ import {
 import { EmlEmbed } from "./embed";
 import { EmlView, VIEW_TYPE_EML } from "./view";
 import type { EmbedContext } from "./types";
+import { tmpDir } from "./util";
 
 const EML_EXTENSION = "eml";
 
@@ -15,6 +16,7 @@ export default class EmbedEmlPlugin extends Plugin {
 
 	async onload(): Promise<void> {
 		await this.loadSettings();
+		void this.purgeTmpDir();
 		this.applyBodyDisplayState();
 		this.register(() => {
 			activeDocument.body.removeClass("eml-mode-scroll");
@@ -60,6 +62,22 @@ export default class EmbedEmlPlugin extends Plugin {
 				console.error("[embed-eml] Failed to unregister embed", err);
 			}
 		});
+	}
+
+	/**
+	 * Drop attachments staged for the OS in past sessions. They can't be removed
+	 * when opened (the external app holds them), so they're cleared on next load.
+	 */
+	private async purgeTmpDir(): Promise<void> {
+		const adapter = this.app.vault.adapter;
+		const dir = tmpDir(this);
+		try {
+			if (await adapter.exists(dir)) {
+				await adapter.rmdir(dir, true);
+			}
+		} catch (err) {
+			console.error("[embed-eml] Failed to purge staged attachments", err);
+		}
 	}
 
 	async loadSettings(): Promise<void> {

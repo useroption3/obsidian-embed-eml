@@ -12,10 +12,6 @@ declare module "obsidian" {
 export interface EmbedContext {
 	app: App;
 	containerEl: HTMLElement;
-	depth?: number;
-	linktext?: string;
-	showInline?: boolean;
-	state?: unknown;
 }
 
 export interface EmbedComponent extends Component {
@@ -24,13 +20,10 @@ export interface EmbedComponent extends Component {
 
 export type EmbedCreator = (
 	context: EmbedContext,
-	file: TFile,
-	subpath?: string
+	file: TFile
 ) => EmbedComponent;
 
 export interface EmbedRegistry {
 	registerExtension(extension: string, creator: EmbedCreator): void;
 	unregisterExtension(extension: string): void;
-	registerExtensions(extensions: string[], creator: EmbedCreator): void;
-	unregisterExtensions(extensions: string[]): void;
 }

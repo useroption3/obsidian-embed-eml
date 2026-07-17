@@ -1,18 +1,22 @@
-/** Convert a byte array to a base64 string (chunked to avoid call-stack limits). */
-export function uint8ToBase64(bytes: Uint8Array): string {
-	let binary = "";
-	const chunkSize = 0x8000;
-	for (let i = 0; i < bytes.length; i += chunkSize) {
-		const chunk = bytes.subarray(i, i + chunkSize);
-		binary += String.fromCharCode.apply(null, chunk);
-	}
-	return btoa(binary);
+import { arrayBufferToBase64, normalizePath, type Plugin } from "obsidian";
+
+/**
+ * Folder where attachments are staged before being handed to the OS. Derived
+ * from the manifest so it follows a renamed config folder; `manifest.dir` is
+ * optional in the API, so fall back to composing it from `configDir`.
+ */
+export function tmpDir(plugin: Plugin): string {
+	const dir =
+		plugin.manifest.dir ??
+		`${plugin.app.vault.configDir}/plugins/${plugin.manifest.id}`;
+	return normalizePath(`${dir}/tmp`);
 }
 
 /** Build a `data:` URL from a MIME type and binary content. */
 export function toDataUrl(mimeType: string, bytes: Uint8Array): string {
 	const type = mimeType || "application/octet-stream";
-	return `data:${type};base64,${uint8ToBase64(bytes)}`;
+	// slice() detaches the view from any shared buffer before encoding.
+	return `data:${type};base64,${arrayBufferToBase64(bytes.slice().buffer)}`;
 }
 
 /** Human-readable byte size, e.g. "12.3 KB". */
