@@ -1,7 +1,7 @@
 import { Component, FileSystemAdapter, Notice, Platform, normalizePath, setIcon } from "obsidian";
 import type EmbedEmlPlugin from "./main";
 import { ParsedAttachment, ParsedEml } from "./parser";
-import { formatBytes, toDataUrl } from "./util";
+import { formatBytes, toDataUrl, tmpDir } from "./util";
 
 /** Baseline styles injected into the sandboxed iframe so emails render legibly. */
 const IFRAME_BASE_CSS = `
@@ -86,16 +86,14 @@ export class EmlRenderer {
 	private renderBody(body: HTMLElement): void {
 		const eml = this.parsed;
 		if (!eml) return;
-		const hasHtml = !!eml.html && eml.html.trim().length > 0;
-		const hasText = !!eml.text && eml.text.trim().length > 0;
+		const html = eml.html?.trim() ? eml.html : null;
+		const text = eml.text?.trim() ? eml.text : null;
 
-		if (this.plugin.settings.renderHtml && hasHtml) {
-			this.renderHtmlBody(body, eml.html as string);
-		} else if (hasText) {
-			this.renderTextBody(body, eml.text as string);
-		} else if (hasHtml) {
-			// HTML rendering disabled but no plain-text alternative exists.
-			this.renderHtmlBody(body, eml.html as string);
+		// HTML wins when enabled, and also when it's the only body we have.
+		if (html && (this.plugin.settings.renderHtml || !text)) {
+			this.renderHtmlBody(body, html);
+		} else if (text) {
+			this.renderTextBody(body, text);
 		} else {
 			body.createDiv({ cls: "eml-empty", text: "(No message body)" });
 		}
@@ -280,13 +278,13 @@ export class EmlRenderer {
 			);
 
 			// Write via the Obsidian vault adapter (no Node.js fs module) to a
-			// plugin-managed folder inside the vault.
+			// plugin-managed folder inside the vault. Staged files are purged on
+			// the next plugin load: the OS app holds them open while the user
+			// reads, so they can't be deleted now.
 			const uniqueId = `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
-			const tmpDir = normalizePath(
-				`.obsidian/plugins/obsidian-embed-eml/tmp/${uniqueId}`
-			);
-			await adapter.mkdir(tmpDir);
-			const tmpPath = normalizePath(`${tmpDir}/${safeName}`);
+			const dir = normalizePath(`${tmpDir(this.plugin)}/${uniqueId}`);
+			await adapter.mkdir(dir);
+			const tmpPath = normalizePath(`${dir}/${safeName}`);
 			// slice() gives a fresh Uint8Array with its own ArrayBuffer, avoiding
 			// shared-buffer aliasing when the view doesn't start at offset 0.
 			await adapter.writeBinary(tmpPath, att.content.slice().buffer);
