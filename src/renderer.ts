@@ -1,5 +1,4 @@
 import { Component, FileSystemAdapter, Notice, Platform, normalizePath, setIcon } from "obsidian";
-import { shell } from "electron";
 import type EmbedEmlPlugin from "./main";
 import { ParsedAttachment, ParsedEml } from "./parser";
 import { formatBytes, toDataUrl } from "./util";
@@ -295,6 +294,9 @@ export class EmlRenderer {
 			// shared-buffer aliasing when the view doesn't start at offset 0.
 			await adapter.writeBinary(tmpPath, att.content.slice().buffer as ArrayBuffer);
 
+			// Required lazily: `electron` only exists in the desktop app, and a
+			// static import would break the bundle on mobile.
+			const shell = window.require("electron").shell;
 			const fullPath = adapter.getFullPath(tmpPath);
 			const error: string = await shell.openPath(fullPath);
 			if (error) new Notice(`Couldn't open attachment: ${error}`);
