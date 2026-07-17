@@ -1,4 +1,9 @@
-import { App, PluginSettingTab, Setting } from "obsidian";
+import {
+	App,
+	PluginSettingTab,
+	Setting,
+	type SettingDefinitionItem,
+} from "obsidian";
 import type EmbedEmlPlugin from "./main";
 
 /** How a long message body is displayed in an inline embed. */
@@ -27,6 +32,57 @@ export class EmbedEmlSettingTab extends PluginSettingTab {
 		super(app, plugin);
 	}
 
+	getSettingDefinitions(): SettingDefinitionItem[] {
+		return [
+			{
+				name: "Render HTML body",
+				desc: "Show the HTML version of emails when available. Disable to always show the plain-text version.",
+				control: { type: "toggle", key: "renderHtml" },
+			},
+			{
+				name: "Block remote images",
+				desc: "Prevent emails from loading remote images and tracking pixels until you choose to load them.",
+				control: { type: "toggle", key: "blockRemoteImages" },
+			},
+			{
+				name: "Long message body",
+				desc: "How to display an email whose body is very tall.",
+				control: {
+					type: "dropdown",
+					key: "bodyDisplayMode",
+					options: {
+						full: "Show in full",
+						scroll: "Scroll within a fixed height",
+					},
+				},
+			},
+			{
+				name: "Body height",
+				desc: "Maximum height in pixels before the body scrolls.",
+				visible: () =>
+					this.plugin.settings.bodyDisplayMode === "scroll",
+				control: {
+					type: "number",
+					key: "maxBodyHeight",
+					min: 50,
+					placeholder: String(DEFAULT_SETTINGS.maxBodyHeight),
+					defaultValue: DEFAULT_SETTINGS.maxBodyHeight,
+				},
+			},
+		];
+	}
+
+	getControlValue(key: string): unknown {
+		return this.plugin.settings[key as keyof EmbedEmlSettings];
+	}
+
+	async setControlValue(key: string, value: unknown): Promise<void> {
+		Object.assign(this.plugin.settings, { [key]: value });
+		await this.plugin.saveSettings();
+		this.refreshDomState();
+	}
+
+	/** Fallback for Obsidian < 1.13.0, which ignores getSettingDefinitions(). */
 	display(): void {
 		this.render();
 	}

@@ -64,7 +64,7 @@ export default class EmbedEmlPlugin extends Plugin {
 
 	async loadSettings(): Promise<void> {
 		const data = (await this.loadData()) as Partial<EmbedEmlSettings> | null;
-		this.settings = Object.assign({}, DEFAULT_SETTINGS, data) as EmbedEmlSettings;
+		this.settings = Object.assign({}, DEFAULT_SETTINGS, data);
 		// Migrate older configs that only stored a numeric maxBodyHeight.
 		if (data && data.bodyDisplayMode === undefined) {
 			this.settings.bodyDisplayMode =

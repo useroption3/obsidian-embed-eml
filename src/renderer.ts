@@ -209,18 +209,10 @@ export class EmlRenderer {
 
 		doc.querySelectorAll("script").forEach((el) => el.remove());
 
-		let head = doc.head;
-		if (!head) {
-			head = doc.createElement("head");
-			doc.documentElement.prepend(head);
-		}
-		const base = doc.createElement("base");
-		base.setAttribute("target", "_blank");
-		head.prepend(base);
-
-		const style = doc.createElement("style");
-		style.textContent = IFRAME_BASE_CSS;
-		head.appendChild(style);
+		const head =
+			doc.head ?? doc.documentElement.createEl("head", { prepend: true });
+		head.createEl("base", { attr: { target: "_blank" }, prepend: true });
+		head.createEl("style", { text: IFRAME_BASE_CSS });
 
 		return {
 			srcdoc: "<!DOCTYPE html>" + doc.documentElement.outerHTML,
@@ -292,7 +284,7 @@ export class EmlRenderer {
 			const tmpPath = normalizePath(`${tmpDir}/${safeName}`);
 			// slice() gives a fresh Uint8Array with its own ArrayBuffer, avoiding
 			// shared-buffer aliasing when the view doesn't start at offset 0.
-			await adapter.writeBinary(tmpPath, att.content.slice().buffer as ArrayBuffer);
+			await adapter.writeBinary(tmpPath, att.content.slice().buffer);
 
 			// Required lazily: `electron` only exists in the desktop app, and a
 			// static import would break the bundle on mobile.
@@ -316,10 +308,10 @@ export class EmlRenderer {
 			type: att.mimeType || "application/octet-stream",
 		});
 		const url = URL.createObjectURL(blob);
-		const a = activeDocument.createElement("a");
-		a.href = url;
-		a.download = att.filename || "attachment";
-		activeDocument.body.appendChild(a);
+		const a = activeDocument.body.createEl("a", {
+			href: url,
+			attr: { download: att.filename || "attachment" },
+		});
 		a.click();
 		a.remove();
 		window.setTimeout(() => URL.revokeObjectURL(url), 1000);
